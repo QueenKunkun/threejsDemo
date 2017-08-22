@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script>
+			function init(){
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,10,130);
+				// 创建绘制对象
+				var renderer = new THREE.WebGLRenderer();
+				// 清除背景颜色(1.0代表不透明)
+//				renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+				// 设置对象大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 开启阴影效果
+				renderer.shadowMapEnabled = true;
+				// 设置相机位置
+				camera.position.set(-50,40,50);
+				camera.lookAt(scene.position);
+				
+				// 增加到网页中
+				document.body.appendChild(renderer.domElement);
+				
+				// 创建cube立方体对象
+				function addCube() {
+					// 随机大小
+					var cubeSize = Math.ceil(3 + Math.random() * 3);
+					// 创建
+					var cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
+					// 材质（深度材质）
+					var cubeMaterial = new THREE.MeshDepthMaterial();
+					// 材质 （色彩材质）
+					var colorMaterial = new THREE.MeshBasicMaterial({
+						color:0x00ff00,// 颜色
+						transparent:true,// 透明度
+						blending:THREE.MultiplyBlending, // 融合（前景和背景颜色相乘）
+					});
+					// 生成立方体（联合材质方法）
+					var cube = new THREE.SceneUtils.createMultiMaterialObject(cubeGeometry,[
+						colorMaterial,cubeMaterial
+					]);
+					// 第二个材质缩放   让两个材质中间有一定缝隙
+					cube.children[1].scale.set(0.99,0.99,0.99);
+					// 开启阴影支持
+					cube.castShadow = true;
+					// 位置设置
+					cube.position.set(
+						-60 + Math.round(Math.random() * 100),
+						Math.round(Math.random() * 10),
+						-100 + Math.round(Math.random() * 150)
+					);
+					// 添加到场景
+					scene.add(cube);
+				}
+				// 循环
+				for(var i = 0; i < 100; i++){
+					addCube();
+				}
+				 // 渲染
+				function render(){
+					// 代替setTimeout
+					window.requestAnimationFrame(render);
+					scene.traverse(function(e){
+						if(e instanceof THREE.Mesh){
+							e.rotation.x += 0.02;
+							e.rotation.y += 0.02;
+							e.rotation.z += 0.02;
+						}
+					})
+					renderer.render(scene,camera);
+				}
+				render();
+			}
+		</script>
+		<style>
+			body{
+				margin: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body onload="init()">
+		
+	</body>
+</html>
