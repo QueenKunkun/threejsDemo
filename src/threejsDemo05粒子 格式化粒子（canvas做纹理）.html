@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				var scene = new THREE.Scene;
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+				var renderer = new THREE.WebGLRenderer;
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				camera.position.set(20,0,150);
+				
+				document.body.appendChild(renderer.domElement);
+				
+				// 返回纹理
+				function getTexture() {
+					// 创建canvas对象
+					var canvas = document.createElement('canvas');
+					// 设置宽高
+					canvas.width = 32;
+					canvas.height = 32;
+					
+					// 得到上下文
+					var cxt = canvas.getContext('2d');
+					// 进行偏移处理
+					cxt.translate(-81,-84);
+					// 填充色彩
+					cxt.fillStyle = 'white';
+					cxt.beginPath();
+					// 移动
+					cxt.moveTo(91,96);
+					// 曲线
+					cxt.bezierCurveTo(88,96,87,99,87,101);
+					cxt.bezierCurveTo(87,103,88,106,91,106);
+					cxt.bezierCurveTo(94,106,95,103,95,101);
+					cxt.bezierCurveTo(95,99,94,96,91,96);
+					
+					// 移动
+					cxt.moveTo(103,96);
+					// 曲线
+					cxt.bezierCurveTo(100,96,87,99,99,101);
+					cxt.bezierCurveTo(99,103,100,106,103,106);
+					cxt.bezierCurveTo(106,106,107,103,107,101);
+					cxt.bezierCurveTo(107,99,106,96,103,96);
+					
+					// 填充
+					cxt.fill();
+					
+					// 创建纹理对象
+					var texture = new THREE.Texture(canvas);
+					// 自动更新
+					texture.needsUpdate = true;
+					// 返回纹理对象
+					return texture;
+				}
+				
+				var cloud;
+				
+				// 创建PointCloud材质
+				function createPointCloud() {
+					// 几何体
+					var geom = new THREE.Geometry();
+					// 材质
+					var material = new THREE.PointCloudMaterial({
+						size:15, // 大小
+						transparent:true, // 是否透明
+						opacity:0.4, // 透明度
+						map:getTexture(), // 纹理
+						sizeAttenuation:true,
+						color:0xffffff // 颜色
+					});
+					
+					var range = 500;
+					// 循环创建微小物体
+					for(var i=0;i<6000;i++) {
+						// 顶点（设置区域）
+						var particle = new THREE.Vector3(
+							Math.random() * range - range/2,
+							Math.random() * range - range/2,
+							Math.random() * range - range/2
+						);
+						// 加入
+						geom.vertices.push(particle);
+					}
+					cloud = new THREE.PointCloud(geom,material);
+					// 命名
+					cloud.name = 'pointcloud';
+					cloud.sortParticles = true;
+					// 加入到场景中
+					scene.add(cloud);
+				}
+				// 绘制
+				function render(){
+					cloud.rotation.x += 0.01;
+					cloud.rotation.z += 0.01;
+					window.requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				// 调用
+				createPointCloud();
+				render();
+			})
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
