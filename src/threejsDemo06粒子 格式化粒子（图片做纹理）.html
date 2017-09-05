@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script>
+			function main() {
+				// 创建场景
+				var scene = new THREE.Scene;
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 设置相机位置
+				camera.position.set(20,40,110);
+				camera.lookAt(new THREE.Vector3(20,30,0));
+				// 加入网页
+				document.body.appendChild(renderer.domElement);
+				
+				var cloud;
+				// 创建相当于一个三维对象
+				function createPointCloud() {
+					if(cloud) {
+						scene.remove(cloud);
+					}
+					// 创建纹理对象(图片加载器)
+				  	var texture = new THREE.ImageUtils.loadTexture('img/yudi.png');
+				  	// 创建几何体
+				  	var geom = new THREE.Geometry();
+				  	// 材质
+				  	var material = new THREE.ParticleBasicMaterial({
+				  		size:10, // 大小
+				  		transparent:true, // 透明
+				  		opacity:0.3, // 透明度
+				  		map:texture, // 纹理 
+				  		blending:THREE.AdditiveBlending, // 融合
+				  		sizeAttenuation:true,
+				  		color:0xffffff // 颜色
+				  	});
+				  	
+				  	var range = 600;
+				  	for(var i=0;i<2000;i++) {
+				  		var particle = new THREE.Vector3(
+				  			Math.random() * range - range/2,
+				  			Math.random() * range - range/2,
+				  			Math.random() * range - range/2,
+				  		);
+				  		particle.velocityY = 0.1 + Math.random() / 5;
+				  		particle.velocityX = (Math.random() - 0.5) / 3;
+				  		geom.vertices.push(particle);
+				  	}
+				  	
+				  	cloud = new THREE.ParticleSystem(geom,material);
+				  	cloud.sortParticles = true;
+				  	scene.add(cloud);
+				}
+				
+				var startTime = Date.now();
+				// 渲染
+				function render() {
+					if(Date.now() - startTime > 80) {
+						createPointCloud();
+						startTime = Date.now();
+					}
+					window.requestAnimationFrame(render);
+					// 得到所有的顶点
+					var vertices = cloud.geometry.vertices;
+					// 对顶点进行运算，重新分配
+					vertices.forEach(function(v){
+						v.y = v.y - v.velocityY;
+						v.x = v.x - v.velocityX;
+						if(v.y <= 0) v.y = 60;
+						if(v.y <= -20 || v.x >= 20) v.velocityX = v.velocityX - 1;
+					});
+					
+					renderer.render(scene,camera);
+				}
+				 // 调用
+				 createPointCloud();
+				 render();
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		
+	</body>
+</html>
