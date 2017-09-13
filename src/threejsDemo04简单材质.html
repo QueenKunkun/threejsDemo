@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机（视角，宽高比例，远近裁剪面）
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer;
+				// 设置颜色（清屏）
+				renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 是否开启阴影支持
+				renderer.shadowMapEnabled = true;
+				
+				// 创建平面几何对象
+				var groundGemo = new THREE.PlaneGeometry(100,100);
+				// 创建材质对象  进行添加
+				var groundMesh = new THREE.Mesh(groundGemo,new THREE.MeshBasicMaterial({color:0x777777}));
+				// x轴旋转
+				groundMesh.rotation.x = -Math.PI/2;
+				// 设定位置
+				groundMesh.position.y = -20;
+				// 加入到场景中
+				scene.add(groundMesh);
+				
+				// 创建球面几何体
+				var sphereGeometry = new THREE.SphereGeometry(14,20,20);
+				// 创建立方体
+				var cubeGeometry = new THREE.BoxGeometry(5,5,5);
+				// 创建一个平面
+				var planeMeometry = new THREE.PlaneGeometry(14,14,4,4);
+				// 创建材质1
+				var meshMaterial = new THREE.MeshBasicMaterial({color:0x7777ff});
+				// 创建材质2(显示线框)
+				var meshMaterial2 = new THREE.MeshBasicMaterial({color:0x7777ff,wireframe:true});
+				// 生成球面体
+				var sphere = new THREE.Mesh(sphereGeometry,meshMaterial2);
+				// 生成立方体
+				var cube = new THREE.Mesh(cubeGeometry,meshMaterial);
+				
+				// 设置球面体和；立方体位置
+				sphere.position.set(0,3,2);
+				cube.position = sphere.position;
+				// 把球面体和立方体加入到场景当中
+				scene.add(sphere);
+				scene.add(cube);
+				// 设置相机位置
+				camera.position.x = -80;
+				camera.position.y = 50;
+				camera.position.z = 40;
+				
+				camera.lookAt(new THREE.Vector3(10,0,0));
+				
+				// 设置环境光
+				var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+				// 灯光加入到场景中
+				scene.add(ambientLight);
+				// 加一个聚点光源
+				var spotLight = new THREE.SpotLight(0xffffff);
+				// 设置光源位置
+				spotLight.position.set(-40,60,-10);
+				// 开启阴影支持
+				spotLight.castShadow = true;
+				// 加入到场景中
+				scene.add(spotLight);
+				
+				// 加入到网页中
+				document.body.appendChild(renderer.domElement);
+				// 渲染
+//				renderer.render(scene,camera);
+
+				// 旋转函数并渲染
+				function render(){
+					requestAnimationFrame(render);
+					cube.rotation.y += 0.01;
+					sphere.rotation.y += 0.01;
+					renderer.render(scene,camera);
+				}
+				render();
+			})
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
