@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 给场景指定一个深度材质属性
+				scene.overrideMaterial = new THREE.MeshDepthMaterial();
+				// 创建相机（视角，宽高比例，远近裁剪面）
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,10,130);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer;
+				// 设置颜色（清屏）(灰色不透明)
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 设置相机位置
+				camera.position.set(-50,40,50);
+				camera.lookAt(scene.position);
+				// 添加到网页中
+				document.body.appendChild(renderer.domElement);
+				
+				// 添加立方体函数
+				function addCube() {
+					// 创建随机大小立方体
+					var cubeSize = Math.ceil(3 + (Math.random()*3));
+					var cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
+					// 材质（对阴影可产生效果的一种材质）
+					var cubeMaterial = new THREE.MeshLambertMaterial({color:Math.random() * 0xffffff});
+					// 生成物体对象
+					var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+					// 开启阴影支持
+					cube.castShadow = true;
+					
+					// 设置位置
+					cube.position.set(
+						-60 + Math.round(Math.random() * 100),
+						Math.round(Math.random() * 10),
+						-100 + Math.round(Math.random() * 150)
+					);
+					// 加入到场景中
+					scene.add(cube);
+				}
+				// 创建20个立方体
+				for(var i=0;i<20;i++){
+					addCube();
+				}
+				// 动起来
+				function render() {
+					window.requestAnimationFrame(render);
+					// 旋转
+					scene.traverse(function(e){
+						// 判断是否是网格对象
+						if(e instanceof THREE.Mesh){
+							e.rotation.x += 0.02;
+							e.rotation.y += 0.02;
+							e.rotation.z += 0.02;
+						}
+					})
+					renderer.render(scene,camera);
+				}
+				render();
+			})
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
