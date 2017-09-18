@@ -33,13 +33,13 @@
 					var cubeGeometry = new THREE.BoxGeometry(cubeSize,cubeSize,cubeSize);
 					// 材质（深度材质）
 					var cubeMaterial = new THREE.MeshDepthMaterial();
-					// 材质 （色彩材质）
+					// 材质 （色彩材质）（基础材质）
 					var colorMaterial = new THREE.MeshBasicMaterial({
 						color:0x00ff00,// 颜色
 						transparent:true,// 透明度
 						blending:THREE.MultiplyBlending, // 融合（前景和背景颜色相乘）
 					});
-					// 生成立方体（联合材质方法）
+					// 生成立方体（联合材质方法）（几何体，材质数组）
 					var cube = new THREE.SceneUtils.createMultiMaterialObject(cubeGeometry,[
 						colorMaterial,cubeMaterial
 					]);

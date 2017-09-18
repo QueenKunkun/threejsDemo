@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer;
+				// 设置背景颜色
+				renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				
+				// 创建平面几何体
+				var groundGeom = new THREE.PlaneGeometry(100,100);
+				// 设置基础材质
+				var groundMesh = new THREE.Mesh(groundGeom,new THREE.MeshBasicMaterial({color:0x777777}));
+				groundMesh.rotation.x = -Math.PI/2;
+				groundMesh.position.y = -20;
+				// 加入到场景中
+				scene.add(groundMesh);
+				
+				// 创建立方体
+				var cubeGeom = new THREE.BoxGeometry(16,16,16);
+				// 设置法向材质（每个面法向与颜色相乘）
+				var cube = new THREE.Mesh(cubeGeom,new THREE.MeshNormalMaterial({color:0x7777ff}));
+				scene.add(cube);
+				
+				// 创建球面体（半径，经度横向细分数，纬度纵向细分数）
+				var sphereGeom = new THREE.SphereGeometry(5,15,15);
+				var sphereMesh = new THREE.Mesh(sphereGeom,new THREE.MeshNormalMaterial());
+				sphereMesh.position.set(-15,0,5);
+				scene.add(sphereMesh);
+				
+				// 设置相机位置
+				camera.position.x = -20;
+				camera.position.y = 30;
+				camera.position.z = 40;
+				camera.lookAt(new THREE.Vector3(10,0,0));
+				
+				// 增加坐标轴
+				scene.add(new THREE.AxisHelper(40));
+				
+				// 增加环境光
+				var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+				scene.add(ambientLight);
+				
+				// 聚光
+				var spotLight = new THREE.SpotLight(0xffffff);
+				spotLight.position.set(-40,60,-10);
+				// 开启阴影支持
+				spotLight.castShadow = true;
+				scene.add(spotLight);
+				
+				document.body.appendChild(renderer.domElement);
+				
+				render();
+				
+				function render() {
+					window.requestAnimationFrame(render);
+					cube.rotation.y += 0.01;
+					sphereMesh.rotation.y += 0.02;
+					
+					renderer.render(scene,camera);
+				}
+			})
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
