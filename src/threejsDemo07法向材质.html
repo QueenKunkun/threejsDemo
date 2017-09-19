@@ -31,6 +31,7 @@
 				var cubeGeom = new THREE.BoxGeometry(16,16,16);
 				// 设置法向材质（每个面法向与颜色相乘）
 				var cube = new THREE.Mesh(cubeGeom,new THREE.MeshNormalMaterial({color:0x7777ff}));
+				// 立方体加入到场景中
 				scene.add(cube);
 				
 				// 创建球面体（半径，经度横向细分数，纬度纵向细分数）
