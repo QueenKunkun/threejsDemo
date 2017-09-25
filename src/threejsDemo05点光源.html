@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script src="share.js"></script>
+		<script>
+			$(function() {
+				// 引用公用方法创建场景相机渲染器
+				var shareObj = share();
+				
+				// 创建球面体
+				var sphereGeometry = new THREE.SphereGeometry(4,20,20);
+				var sphereMaterial = new THREE.MeshLambertMaterial({color: 0x7777ff});
+				var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+				
+				sphere.position.set(20,6,0);
+				
+				// 创建立方体
+				var cubeGeometry = new THREE.BoxGeometry(5,5,5);
+				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff70ff});
+				var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+				
+				cube.position.set(0,6,0);
+				
+				// 加入到场景中
+				shareObj.scene.add(sphere);
+				shareObj.scene.add(cube);
+				// 设置相机位置
+				shareObj.camera.position.set(-25,30,25);
+				shareObj.camera.lookAt(shareObj.scene.position);
+				
+				// 加入点光源
+				var pointLight = new THREE.PointLight(0xffffff);
+				pointLight.position.set(-40,60,-10);
+				shareObj.scene.add(pointLight);
+				
+				// 增加坐标轴
+				shareObj.scene.add(new THREE.AxisHelper(40));
+				
+				// 加入到网页中
+				document.body.appendChild(shareObj.renderer.domElement);
+				render();
+				function render() {
+					requestAnimationFrame(render);
+					pointLight.position.z += 0.2;
+					// 渲染
+					shareObj.renderer.render(shareObj.scene,shareObj.camera);
+				}
+			})
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
