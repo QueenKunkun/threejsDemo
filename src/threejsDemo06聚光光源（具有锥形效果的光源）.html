@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script src="share.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script>
+			$(function() {
+				// 引用公用方法创建场景相机渲染器
+				var shareObj = share();
+				
+				// 创建球面体
+				var sphereGeometry = new THREE.SphereGeometry(4,20,20);
+				var sphereMaterial = new THREE.MeshLambertMaterial({color: 0x770077});
+				var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+				
+				sphere.position.set(20,5,2);
+				
+				// 加入到场景中
+				shareObj.scene.add(sphere);
+				
+				// 创建立方体
+				var cubeGeometry = new THREE.BoxGeometry(5,5,5);
+				var cubeMaterial = new THREE.MeshLambertMaterial({color:0x666600});
+				var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+				cube.position.set(-5,3,0);
+				cube.castShadow = true;
+				shareObj.scene.add(cube);
+				
+				// 设置相机位置
+				shareObj.camera.position.set(-25,30,24);
+				shareObj.camera.lookAt(shareObj.scene.position);
+				
+				// 加入聚光光源
+				var spotLight = new THREE.SpotLight(0xffffff);
+				spotLight.position.set(-40,60,-12);
+				
+				spotLight.target = sphere;
+				spotLight.angle = Math.PI/20;
+				
+				shareObj.scene.add(spotLight);
+				shareObj.scene.add(new THREE.SpotLightHelper(spotLight));
+				// 增加坐标轴
+				shareObj.scene.add(new THREE.AxisHelper(40));
+				
+				// 加入到网页中
+				document.body.appendChild(shareObj.renderer.domElement);
+				render();
+				shareObj.renderer.render(shareObj.scene,shareObj.camera);
+				// 开启相机控制
+//				new THREE.OrbitControls(shareObj.camera,shareObj.renderer.domElement);
+				
+				
+				var angleNum = 3;
+				// 上下控制角度左右键控制光源位置
+				document.onkeydown = function(event){
+					console.log('keyCode',event.keyCode);
+					switch(event.keyCode){
+						// 上下
+						case 38: 
+							angleNum += 1;
+							break;
+						case 40: 
+							angleNum -= 1;
+							if(angleNum < 1){
+								angleNum = 1;
+							}
+							break;
+						// 左右
+						case 37: 
+							spotLight.position.x += 0.2;
+							break;
+						case 39: 
+							spotLight.position.x -= 0.2;
+							break;
+					}
+				}
+				
+				function render() {
+					spotLight.angle = Math.PI/angleNum;
+					window.requestAnimationFrame(render);
+					// 更改角度
+					// 更改光线z轴的值
+//					spotLight.position.z += 0.2;
+					// 渲染
+					shareObj.renderer.render(shareObj.scene,shareObj.camera);
+				}
+			})
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
