@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script>
+			function main() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				// 设置背景颜色
+				renderer.setClearColor(new THREE.Color(0xFEFEFE,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 加入阴影支持设置为真
+				render.shadowMapEnabled = true;
+				
+				// 设置相机位置
+				camera.position.x = -20;
+				camera.position.y = 30;
+				camera.position.z = 40;
+				camera.lookAt(new THREE.Vector3(10,0,0));
+				
+				// 创建网格对象方法
+				function creatMesh(geom) {
+					// 法向材质
+					var meshMaterial = new THREE.MeshNormalMaterial();
+					// 创建基础材质
+					var wireFrameMaterial = new THREE.MeshBasicMaterial();
+					// 设置线框
+					wireFrameMaterial.wireframe = true;
+					// 返回联合材质
+					return THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial,wireFrameMaterial]);
+				}
+				// 创建平面圆(半径，段数，起始位置，结束位置)
+				var circle = creatMesh(new THREE.CircleGeometry(4,10,0.2*Math.PI,0.3*Math.PI));
+				// 加入到场景中
+				scene.add(circle);
+				
+				// 创建聚光源
+				var spotLight = new THREE.SpotLight(0xffff01);
+				spotLight.position.set(-40,60,-10);
+				scene.add(spotLight);
+				
+				// 绘制方法
+				function render() {
+//					circle.rotation.x += 0.01;
+//					circle.rotation.y += 0.01;
+//					circle.rotation.z += 0.01;
+					requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				document.body.appendChild(renderer.domElement);
+				render();
+			}
+		</script>
+	</head>
+	<body onload="main()">
+	</body>
+</html>
