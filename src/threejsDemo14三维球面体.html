@@ -4,8 +4,9 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
 		<script>
-			function main() {
+			$(function (){
 				// 创建场景
 				var scene = new THREE.Scene();
 				// 创建相机
@@ -36,11 +37,44 @@
 					// 返回联合材质
 					return THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial,wireFrameMaterial]);
 				}
+				var mesh;
 				// 创建球面体(半径，横向段数，纵向段数，起始位置，结束位置)
-				var sphere = creatMesh(new THREE.SphereGeometry(10,50,50,0,2*Math.PI));
+				var sphere = creatMesh(new THREE.SphereGeometry(10,50,50,0,Math.PI*2));
+				// 创建圆柱体
+				var cylinder = creatMesh(new THREE.CylinderGeometry(10,10,15,20,100));
+				// 创建甜甜圈
+				var torus = creatMesh(new THREE.TorusGeometry(5,2,20,10,Math.PI*2));
+				// 创建环面扭结
+				var knot = creatMesh(new THREE.TorusKnotGeometry(10,1,64,8,2,9,2));
 				// 加入到场景中
 				scene.add(sphere);
-				
+//				setTimeout(function() {
+//					scene.remove(sphere);
+//					scene.add(cylinder);
+//					sphere = cylinder;
+//				}, 3000);
+				mesh = sphere;
+				// 按钮控制
+				$('#sphere').click(function(){
+					scene.remove(mesh);
+					mesh = sphere;
+					scene.add(mesh);
+				});
+				$('#cylinder').click(function(){
+					scene.remove(mesh);
+					mesh = cylinder;
+					scene.add(mesh);
+				});
+				$('#torus').click(function(){
+					scene.remove(mesh);
+					mesh = torus;
+					scene.add(mesh);
+				});
+				$('#knot').click(function(){
+					scene.remove(mesh);
+					mesh = knot;
+					scene.add(mesh);
+				});
 				// 创建聚光源
 				var spotLight = new THREE.SpotLight(0xffffff);
 				spotLight.position.set(-40,55,-11);
@@ -48,17 +82,24 @@
 				
 				// 绘制方法
 				function render() {
-//					sphere.rotation.x += 0.01;
-					sphere.rotation.y += 0.01;
-//					sphere.rotation.z += 0.01;
+//					mesh.rotation.x += 0.01;
+//					mesh.rotation.y += 0.01;
+//					mesh.rotation.z += 0.01;
 					requestAnimationFrame(render);
 					renderer.render(scene,camera);
 				}
-				document.body.appendChild(renderer.domElement);
+				$('#webgl-scene').append(renderer.domElement);
 				render();
-			}
+		})
 		</script>
 	</head>
-	<body onload="main()">
+	<body>
+		<div id="webgl-scene"></div>
+		<div id="controller" style="position:fixed;right:0;top:0;">
+			<button id="sphere">sphere</button>
+			<button id="cylinder">cylinder</button>
+			<button id="torus">torus</button>
+			<button id="knot">knot</button>
+		</div>
 	</body>
 </html>
