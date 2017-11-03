@@ -4,9 +4,27 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<script src="three.min.js"></script>
+		<style>
+			#controller{
+				position: fixed;
+				right: 0;
+				top: 0;
+			}
+		</style>
 	</head>
 	<body>
+		<div id="webgl-scene"></div>
+		<div id="controller">
+			<input type="text" id="size" />
+			<button id="z4">正4面体</button>
+			<button id="z8">正8面体</button>
+			<button id="z20">正20面体</button>
+		</div>
 		<script>
+			var sizeInput = document.querySelector('#size'); 
+			var z4Button = document.querySelector('#z4'); 
+			var z8Button = document.querySelector('#z8'); 
+			var z20Button = document.querySelector('#z20'); 
 			//　创建场景
 			var scene = new THREE.Scene;
 			// 创建相机
@@ -29,9 +47,41 @@
 			var mesh = null;
 			var size = 10;
 			// 设置大小
-			// 创建二十面体
+			// 创建正二十面体
 			var z20 = createMesh(new THREE.IcosahedronGeometry(size));
+			// 创建正四面体
+			var z4 = createMesh(new THREE.TetrahedronGeometry(size));
+			// 创建正八面体
+			var z8 = createMesh(new THREE.OctahedronGeometry(size));
 			mesh = z20;
+			
+			sizeInput.oninput = function (e) {
+				scene.remove(mesh);
+				size = parseInt(e.target.value);
+				// 创建正二十面体
+				var z20 = createMesh(new THREE.IcosahedronGeometry(size));
+				// 创建正四面体
+				var z4 = createMesh(new THREE.TetrahedronGeometry(size));
+				// 创建正八面体
+				var z8 = createMesh(new THREE.OctahedronGeometry(size));
+				mesh = z20;
+				scene.add(mesh);
+			};
+			z4Button.onclick = function (e) {
+				scene.remove(mesh);
+				mesh = z4;
+				scene.add(mesh);
+			};
+			z8Button.onclick = function (e) {
+				scene.remove(mesh);
+				mesh = z8;
+				scene.add(mesh);
+			};
+			z20Button.onclick = function (e) {
+				scene.remove(mesh);
+				mesh = z20;
+				scene.add(mesh);
+			};
 			// 创建网格对象方法
 			function createMesh(geom) {
 				// 创建法向材质
