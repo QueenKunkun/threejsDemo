@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				// 设置背景颜色
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 相机位置
+				camera.position.set(0,0,155);
+				// 渲染到网页中
+				document.body.appendChild(renderer.domElement);
+				
+				// 创建精灵
+				function createSprites() {
+					// 创建精灵的材质
+					var material = new THREE.SpriteMaterial();
+					// 循环创建
+					for(var x=-5;x<5;x++){
+						for(var y=-5;y<5;y++){
+							var sprite = new THREE.Sprite(material);
+							sprite.position.set(x*10,y*10,0);
+							scene.add(sprite);
+						}
+					}
+				}
+				
+				// 绘制
+				function render(){
+					window.requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				// 调用
+				createSprites();
+				render();
+			})
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
