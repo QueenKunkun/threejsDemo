@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				// 设置背景颜色
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 相机位置
+				camera.position.set(0,0,155);
+				// 渲染到网页中
+				document.body.appendChild(renderer.domElement);
+				
+				// 创建粒子
+				function createParticles() {
+					// 创建几何体
+					var geom = new THREE.Geometry();
+					// 创建材质
+					var material = new THREE.PointCloudMaterial({
+						size:5, // 大小
+						vertexColors:true, // 顶点颜色变为真
+						color:0xffffff // 颜色
+					});
+					// 循环创建
+					for(var x=-5;x<5;x++){
+						for(var y=-5;y<5;y++){
+							var particle = new THREE.Vector3(x*10,y*10,0);
+							// 顶点
+							geom.vertices.push(particle);
+							// 颜色
+							geom.colors.push(new THREE.Color(Math.random()*0x00ffff));
+						}
+					}
+					var cloud = new THREE.PointCloud(geom,material);
+					scene.add(cloud);
+				}
+				
+				// 绘制
+				function render(){
+					window.requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				// 调用
+				createParticles();
+				render();
+			})
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
