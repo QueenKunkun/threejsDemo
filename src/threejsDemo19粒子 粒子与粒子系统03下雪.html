@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene();
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				// 设置背景颜色
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				// 设置大小
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 相机位置
+				camera.position.set(20,0,150);
+				// 渲染到网页中
+				document.body.appendChild(renderer.domElement);
+				
+				var cloud;
+				// 创建雪花
+				function createParticles() {
+					var geom = new THREE.Geometry();
+					// 创建材质
+					var material = new THREE.PointCloudMaterial({
+						size:5, // 大小
+						transparent:true, // 设置是否透明
+						opacity:0.5, // 设置透明度
+						vertexColors:true, // 顶点颜色变为真
+						sizeAttenuation: true,
+						color:0xffffff // 颜色
+					});
+					// 循环创建
+					var range = 500;
+					for(var i=0;i<10000;i++){
+						var particle = new THREE.Vector3(
+							Math.random() * range - range/2,
+							Math.random()*range - range/2,
+							Math.random()*range - range/2,
+						);
+						geom.vertices.push(particle);
+						var color = new THREE.Color(0xffffff);
+						// 设置颜色
+						color.setHSL(color.getHSL().h,color.getHSL().s,Math.random() * color.getHSL().l);
+						geom.colors.push(color);
+					}
+					cloud = new THREE.PointCloud(geom,material);
+					cloud.name  = 'particles';
+					scene.add(cloud);
+				}
+				
+				// 绘制
+				function render(){
+					cloud.rotation.x += 0.01;
+					cloud.rotation.z += 0.01;
+					window.requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				// 调用
+				createParticles();
+				render();
+			})
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
