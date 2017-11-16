@@ -21,7 +21,7 @@
 				document.body.appendChild(renderer.domElement);
 				
 				var cloud;
-				// 创建相当于一个三维对象
+				// 创建  相当于一个三维对象
 				function createPointCloud() {
 					if(cloud) {
 						scene.remove(cloud);
@@ -36,20 +36,23 @@
 				  		transparent:true, // 透明
 				  		opacity:0.3, // 透明度
 				  		map:texture, // 纹理 
-				  		blending:THREE.AdditiveBlending, // 融合
+				  		blending:THREE.AdditiveBlending, // 融合(把前面的颜色和精灵的颜色相融合)
 				  		sizeAttenuation:true,
 				  		color:0xffffff // 颜色
 				  	});
 				  	
+				  	// 设定范围
 				  	var range = 600;
 				  	for(var i=0;i<2000;i++) {
-				  		var particle = new THREE.Vector3(
+				  		var particle = new THREE.Vector3( //（三个分量）
 				  			Math.random() * range - range/2,
 				  			Math.random() * range - range/2,
 				  			Math.random() * range - range/2,
 				  		);
+				  		// 对particle进行配置
 				  		particle.velocityY = 0.1 + Math.random() / 5;
 				  		particle.velocityX = (Math.random() - 0.5) / 3;
+				  		// 设置顶点
 				  		geom.vertices.push(particle);
 				  	}
 				  	
