@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+		<script src="jquery.js"></script>
+		<script>
+			$(function() {
+				// 创建场景
+				var scene = new THREE.Scene;
+				// 创建相机
+				var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+				// 创建渲染器
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor(new THREE.Color(0x000000,1.0));
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				// 设置相机位置
+				camera.position.set(20,0,150);
+				// 加入网页
+				document.body.appendChild(renderer.domElement);
+
+				// 主对像
+				var group;
+				// 循环创建   精灵
+				function createSprites() {
+					// 创建3D对象
+					group = new THREE.Object3D();
+					// 设定范围
+					var range = 200;
+					for(var i=0;i<500;i++){
+						group.add(createSprite(10,false,0.6,0xffffff,i%5,range));
+					}
+					scene.add(group);
+				}
+
+				// 返回纹理对象（图片格式）
+				function getTexture() {
+					return new THREE.ImageUtils.loadTexture('./img/yudi.png');
+				}
+				// 创建精灵
+				function createSprite(size,transparent,opacity,color,spriteNumber,range) {
+					// 创建精灵材质
+					var spriteMaterial = new THREE.SpriteMaterial({
+						opacity:opacity,
+						color:color,
+						transparent:transparent,
+						map:getTexture()
+					})
+					// 设置偏移量
+					spriteMaterial.map.offset = new THREE.Vector2(0.2 * spriteNumber, 0);
+					// 设置平铺
+					spriteMaterial.map.repeat = new THREE.Vector2(1/5, 1);
+					// 设置深度测试
+					spriteMaterial.depthTest = false;
+					// 融合模式
+					spriteMaterial.blending = THREE.AdditiveBlending;
+					// 创建一个精灵
+					var sprite = new THREE.Sprite(spriteMaterial);
+					// 裁剪
+					sprite.scale.set(size,size,size);
+					// 设置随机位置
+					sprite.position.set(
+						Math.random() * range - range/2,
+						Math.random() * range - range/2,
+						Math.random() * range - range/2
+					);
+					// 速度参数
+					sprite.velocityX = 5;
+					return sprite;
+				}
+
+				// 渲染
+				function render() {
+					group.rotation.x += 0.01;
+					requestAnimationFrame(render);
+					renderer.render(scene,camera);
+				}
+				 // 调用
+				 createSprites();
+				 render();
+			})
+		</script>
+	</head>
+	<body>
+
+	</body>
+</html>
