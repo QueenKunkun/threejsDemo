@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="three.min.js"></script>
+	</head>
+	<body>
+		<script>
+			// 创建场景
+			var scene = new THREE.Scene();
+			// 创建相机(透视投影相机)
+			var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,1000);
+			// 创建渲染器
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+			renderer.setSize(window.innerWidth,window.innerHeight);
+			// 加入网页
+			document.body.appendChild(renderer.domElement);
+
+			// 创建几何体
+			var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
+			// 几何体材质（兰伯特材质对光源有反应）
+			var planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+			// 创建面板（地面）
+			var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+
+			// 设置位置
+			plane.position.set(15,0,0);
+			// 设置角度
+			plane.rotation.x = 0.5 * Math.PI;
+			// 加入到场景中
+			scene.add(plane);
+
+			// 创建立方体
+			var cubeGeometry = new THREE.BoxGeometry(4,4,4);
+			// 立方体材质
+			var cubeMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
+			// 生成立方体
+			var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+			// 设置位置
+			cube.position.set(-9,3,0);
+			// 加入到场景中
+			scene.add(cube);
+
+			// 创建圆柱体
+			var cylinderGeometry = new THREE.CylinderGeometry(2,2,20);
+			// 圆柱体材质
+			var cylinderMaterial = new THREE.MeshLambertMaterial({color:0x77ff78});
+			// 生成圆柱体
+			var cylinder = new THREE.Mesh(cylinderGeometry,cylinderMaterial);
+			// 设置位置
+			cylinder.position.set(0,0,1);
+			// 加入到场景中
+			scene.add(cylinder);
+
+
+			// 设置相机位置
+			camera.position.x = -30;
+			camera.position.y = 40;
+			camera.position.z = 30;
+			// 设置相机朝向
+			camera.lookAt(scene.position);
+		</script>
+
+	</body>
+</html>
