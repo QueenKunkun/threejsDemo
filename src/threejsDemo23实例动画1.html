@@ -28,7 +28,7 @@
 			// 设置位置
 			plane.position.set(15,0,0);
 			// 设置角度
-			plane.rotation.x = 0.5 * Math.PI;
+			plane.rotation.x = -0.5 * Math.PI;
 			// 加入到场景中
 			scene.add(plane);
 
@@ -63,7 +63,33 @@
 			camera.lookAt(scene.position);
 
 			// 增加环境光
-			var ambientlight
+			var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+			// 加入到场景中
+			scene.add(ambientLight);
+			// 增加聚光灯
+			var spotLight = new THREE.SpotLight(0xffffff);
+			// 设置聚光灯位置
+			spotLight.position.set(-40,60,-10);
+			// 加入到场景中
+			scene.add(spotLight);
+
+			document.body.appendChild(renderer.domElement);
+
+			render();
+
+			function render() {
+				window.requestAnimationFrame(render);
+				// 旋转
+				cube.rotation.x += 0.02;
+				cube.rotation.y += 0.02;
+				cube.rotation.z += 0.02;
+
+				cylinder.rotation.x += 0.02;
+				cylinder.rotation.y += 0.02;
+				cylinder.rotation.z += 0.02;
+
+				renderer.render(scene,camera);
+			}
 		</script>
 
 	</body>
