@@ -5,6 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title></title>
+  <script src="jquery.js"></script>
+  <script src="three.js"></script>
+  <script>
+    $(function() {
+      // 创建时间对象
+      var clock = new THREE.Clock();
+      // 创建场景
+      var scene = new THREE.Scene()
+      // 创建相机
+      var camera = new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,1000);
+      // 设置相机位置
+      camera.position.set(-30,40,30);
+      // 设置相机朝向
+      camera.lookAt(scene.position);
+      // 创建渲染器
+      var renderer = new THREE.WebGLRenderer();
+      // 设置清屏颜色
+      renderer.setClearColor(new THREE.Color(0xEEEEEE,1.0));
+      // 设置大小
+      renderer.setSize(window.innerWidth,window.innerHeight);
+
+      // 创建地平面几何体
+      var planeGeometry = new THREE.PlaneGeometry(120,60,1,1);
+      //材质
+      var planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+      // 生成网格对象
+      var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+      // 设置位置
+      plane.position.set(15,0,0);
+      plane.rotation.x = -0.5 * Math.PI;
+
+      // 加入到场景中
+      scene.add(plane);
+
+      // 增加环境光
+      var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+      // 加入到场景中
+      scene.add(ambientLight);
+      // 增加聚光
+      var spotLight = new THREE.SpotLight(0xffffff);
+      spotLight.position.set(-40,60,-10);
+      scene.add(spotLight);
+
+      var cubeMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
+      // 创建立方体
+      function addCube(x,y,z) {
+
+        var cubeGeometry = new THREE.BoxGeometry(4,4,4);
+        var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+        // 设置位置
+        cube.position.set(x,y,z);
+        scene.add(cube);
+      }
+
+      addCube(-9,3,0);
+      addCube(9,3,0);
+      addCube(19,20,0);
+      addCube(-10,10,2);
+      addCube(-19,20,0);
+
+      // 渲染到浏览器中
+      document.body.appendChild(renderer.domElement);
+
+      render();
+
+      function render() {
+        renderer.render(scene,camera);
+      }
+    })
+  </script>
 </head>
 <body>
 
