@@ -7,6 +7,7 @@
   <title></title>
   <script src="jquery.js"></script>
   <script src="three.js"></script>
+  <script src="lib/TrackballControls.js"></script>
   <script>
     $(function() {
       // 创建时间对象
@@ -65,12 +66,24 @@
       addCube(-10,10,2);
       addCube(-19,20,0);
 
+      // 增加轨迹球控件(相机加入进去)
+      var trackballControls = new THREE.TrackballControls(camera);
+      // 设置属性
+      trackballControls.rotateSpeed = 1.0;
+      trackballControls.zoomSpeed = 1.0;
+      trackballControls.panSpeed = 1.0;
+      trackballControls.staticMoving = true;
+
       // 渲染到浏览器中
       document.body.appendChild(renderer.domElement);
 
       render();
 
       function render() {
+        window.requestAnimationFrame(render);
+        // 得到时间（让动画更加平滑）
+        var delta = clock.getDelta();
+        trackballControls.update(delta);
         renderer.render(scene,camera);
       }
     })
